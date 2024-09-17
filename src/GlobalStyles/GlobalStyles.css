@@ -1,0 +1,20 @@
+.text-h3 {
+  font-size: 24px;
+}
+
+.custom-link {
+  font-size: 16px;
+  color: rgb(33, 35, 83);
+  text-decoration: none;
+}
+
+.custom-link:hover {
+  color: rgb(156, 105, 226); /* Màu khi hover */
+  .icon-link {
+    transform: translateX(5px);
+  }
+}
+
+.icon-link {
+  color: rgb(156, 105, 226);
+}

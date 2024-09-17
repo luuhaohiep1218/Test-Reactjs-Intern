@@ -10,13 +10,14 @@ import {
   Routes,
 } from "react-router-dom";
 
+import "./GlobalStyles/GlobalStyles.css";
+
 function App() {
   return (
     <Router>
       <div className="App my-4">
         <Container>
           <Header />
-
           <Routes>
             <Route path="/" element={<HomeNotSignIn />} />
           </Routes>
