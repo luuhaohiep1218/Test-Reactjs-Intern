@@ -1,0 +1,45 @@
+.div-1-h1 {
+  font-size: 60px;
+  color: #212353;
+  padding-top: 96px;
+}
+.div-1-text {
+  max-width: 350px;
+  font-size: 18px;
+  margin-top: 48px;
+}
+.div-1-img {
+  margin-left: 40px;
+  margin-top: 180px;
+}
+
+.div-1-btn {
+  width: 30%;
+}
+
+@media (max-width: 1200px) {
+  .div-1-text {
+    max-width: none;
+  }
+}
+
+.text-h3 {
+  font-size: 24px;
+}
+
+.custom-link {
+  font-size: 16px;
+  color: rgb(33, 35, 83);
+  text-decoration: none;
+}
+
+.custom-link:hover {
+  color: rgb(156, 105, 226); /* Màu khi hover */
+  .icon-link {
+    transform: translateX(5px);
+  }
+}
+
+.icon-link {
+  color: rgb(156, 105, 226);
+}

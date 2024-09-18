@@ -10,7 +10,7 @@ const Header = () => {
         <Navbar className="d-block">
           <div>
             <Row>
-              <Col md="10">
+              <Col xl={10} lg={9} md={9} sm={8} xs={7}>
                 <Navbar.Brand>
                   <Link to={"/"}>
                     <img
@@ -21,7 +21,7 @@ const Header = () => {
                   </Link>
                 </Navbar.Brand>
               </Col>
-              <Col md="2">
+              <Col xl={2} lg={3} md={3} sm={4} xs={5}>
                 <ButtonApp title="Sign In" size="large" />
               </Col>
             </Row>
