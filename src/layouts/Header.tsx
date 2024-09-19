@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 import { Container, Navbar, Row, Col } from "react-bootstrap";
 import ButtonApp from "../components/Button";
 
-const Header = () => {
+interface IProps {
+  page: string;
+}
+
+const Header = (props: IProps) => {
+  const { page } = props;
   return (
     <>
       <div className="mx-5">
@@ -22,7 +27,9 @@ const Header = () => {
                 </Navbar.Brand>
               </Col>
               <Col xl={2} lg={3} md={3} sm={4} xs={5}>
-                <ButtonApp title="Sign In" size="large" />
+                {page && page === "HomeNotSignIn" && (
+                  <ButtonApp title="Sign In" size="large" />
+                )}
               </Col>
             </Row>
           </div>

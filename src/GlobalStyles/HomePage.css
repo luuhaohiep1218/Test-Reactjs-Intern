@@ -1,5 +1,5 @@
 .div-1-h1 {
-  font-size: 60px;
+  font-size: 70px;
   color: #212353;
   padding-top: 96px;
 }
@@ -9,19 +9,47 @@
   margin-top: 48px;
 }
 .div-1-img {
-  margin-left: 40px;
-  margin-top: 180px;
+  margin-top: 200px;
+  width: 80%;
+  height: 65%;
 }
 
 .div-1-btn {
   width: 30%;
 }
-
-@media (max-width: 1200px) {
-  .div-1-text {
-    max-width: none;
-  }
+.features-card {
+  flex-direction: column;
+  position: relative;
 }
+.features-card-img {
+  position: absolute;
+  width: 100%;
+  transform: translate(-32%, -140%);
+}
+.features-car-content {
+  position: absolute;
+  max-width: 220px;
+  text-align: start;
+  transform: translate(-25%, -135%);
+}
+
+/* @media (max-width: 1400px) {
+  .features-card {
+    flex-direction: column;
+    position: relative;
+  }
+  .features-card-img {
+    position: absolute;
+    width: 100%;
+    transform: translate(-18%, -140%);
+  }
+  .features-car-content {
+    position: absolute;
+    max-width: 220px;
+    text-align: start;
+    transform: translate(-25%, -135%);
+  }
+} */
 
 .text-h3 {
   font-size: 24px;
@@ -42,4 +70,87 @@
 
 .icon-link {
   color: rgb(156, 105, 226);
+}
+
+.testimonials {
+  background-color: rgb(156, 105, 226);
+  border-radius: 50px;
+  height: 800px;
+}
+.testimonials-h2 {
+  margin-top: 40px;
+  font-size: 45px;
+  font-weight: 700;
+}
+
+.testimonials-cards {
+  border-radius: 20px;
+  height: 300px;
+}
+.card {
+  padding: 60px 70px;
+}
+
+.card-name {
+  color: rgb(33, 35, 83);
+  font-size: 18px;
+  font-weight: 700;
+  font-family: Nunito;
+}
+.card-url {
+  color: rgb(156, 105, 226);
+  font-size: 16px;
+  font-weight: 600;
+  font-family: Nunito;
+}
+.card-description {
+  max-width: 360px;
+}
+
+@media (max-width: 1200px) {
+  .div-1-h1 {
+    text-align: center;
+  }
+  .div-1-text {
+    text-align: center;
+    max-width: none;
+  }
+  .div-1-btn {
+    margin: auto;
+  }
+  .div-1-img {
+    margin-top: 50px;
+    width: 100%;
+    img {
+      width: 100%;
+    }
+  }
+  .features-card-background {
+    display: none;
+  }
+  .features-card-img {
+    position: relative;
+    transform: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .features-card-img img {
+    width: 15%;
+  }
+  .features-car-content {
+    position: relative;
+    transform: none;
+  }
+  .features-card {
+    justify-content: center;
+    align-items: center;
+  }
+  .testimonials-cards {
+    width: 100%;
+    height: 400px;
+  }
+  .card-description {
+    max-width: 250px;
+  }
 }

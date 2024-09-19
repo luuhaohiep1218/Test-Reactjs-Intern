@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 import Header from "./layouts/Header";
-import HomeNotSignIn from "./pages/HomeNotSignIn";
+import HomeNotSignIn from "./pages/HomePage";
 import Footer from "./layouts/Footer";
 import {
   BrowserRouter as Router,
@@ -11,19 +11,18 @@ import {
 } from "react-router-dom";
 
 import "./GlobalStyles/GlobalStyles.css";
+import SignIn from "./pages/SignIn";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
     <Router>
-      <div className="App my-4">
-        <Container>
-          <Header />
-          <Routes>
-            <Route path="/" element={<HomeNotSignIn />} />
-          </Routes>
-          <hr />
-          <Footer />
-        </Container>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<HomeNotSignIn />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
       </div>
     </Router>
   );

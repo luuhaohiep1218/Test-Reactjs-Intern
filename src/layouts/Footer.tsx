@@ -1,12 +1,19 @@
 import React from "react";
-import { Avatar, Col, Row } from "antd";
+import { Avatar, Button } from "antd";
+import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { MessageFilled } from "@ant-design/icons";
+import "../GlobalStyles/Footer.css";
 const Footer = () => {
   return (
     <>
-      <div className="mx-5">
+      <div className="mx-5 ">
         <Row>
-          <Col span={9}>
+          <Col
+            xl={5}
+            lg={12}
+            className="text-xl-start text-lg-center text-md-center text-sm-center "
+          >
             <div className="mb-5">
               <Link to={"/"}>
                 <img
@@ -16,19 +23,26 @@ const Footer = () => {
                 />
               </Link>
             </div>
-            <div
-              className="fw-semibold mb-3 fs-6"
-              style={{ color: "rgb(33, 35, 83,1)", maxWidth: "260px" }}
-            >
-              Warehouse Society, 234 Bahagia Ave Street PRBW 29281
+            <div className="d-flex justify-content-xl-start justify-content-lg-center justify-content-sm-center">
+              <div
+                className="fw-semibold mb-3 fs-6"
+                style={{ color: "rgb(33, 35, 83,1)", maxWidth: "260px" }}
+              >
+                Warehouse Society, 234 Bahagia Ave Street PRBW 29281
+              </div>
             </div>
+
             <div className="fw-light fst-italic">info@warehouse.project</div>
             <div className="fw-light fst-italic">1-232-3434 (Main)</div>
           </Col>
-          <Col span={5}>
+          <Col
+            xl={2}
+            lg={12}
+            className="text-lg-center text-md-center text-sm-center "
+          >
             <div>
               <div
-                className="fw-semibold mb-4 fs-6"
+                className="fw-semibold my-4 fs-6"
                 style={{ color: "rgb(33, 35, 83,1)" }}
               >
                 About
@@ -81,9 +95,13 @@ const Footer = () => {
               </ul>
             </div>
           </Col>
-          <Col span={5}>
+          <Col
+            xl={2}
+            lg={12}
+            className="text-lg-center text-md-center text-sm-center "
+          >
             <div
-              className="fw-semibold mb-4 fs-6"
+              className="fw-semibold my-4 fs-6"
               style={{ color: "rgb(33, 35, 83,1)" }}
             >
               Help
@@ -146,9 +164,13 @@ const Footer = () => {
               </li>
             </ul>
           </Col>
-          <Col span={5}>
+          <Col
+            xl={3}
+            lg={12}
+            className="text-lg-center text-md-center text-sm-center "
+          >
             <div
-              className="fw-semibold mb-4 fs-6"
+              className="fw-semibold my-4 fs-6"
               style={{ color: "rgb(33, 35, 83,1)" }}
             >
               Social Media
@@ -160,6 +182,28 @@ const Footer = () => {
             </div>
           </Col>
         </Row>
+        <div className="d-flex justify-content-between">
+          <div>
+            <p className="fw-light fst-italic" style={{ maxWidth: "360px" }}>
+              © Datawarehouse™, 2020. All rights reserved. Company Registration
+              Number: 21479524.
+            </p>
+          </div>
+          <div className="div-box-chat">
+            <Button
+              className="btn-box-chat"
+              size="large"
+              shape="circle"
+              style={{ width: "60px", height: "60px" }}
+              icon={
+                <MessageFilled
+                  className="icon-btn"
+                  style={{ color: "#894DDB" }}
+                />
+              }
+            />
+          </div>
+        </div>
       </div>
     </>
   );
