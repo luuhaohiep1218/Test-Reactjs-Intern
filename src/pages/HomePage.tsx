@@ -1,4 +1,11 @@
+import React, { memo, useEffect, useRef, useState } from "react";
 import { ArrowRightOutlined } from "@ant-design/icons";
+import {
+  useSpring,
+  SpringValue,
+  animated,
+  useSpringRef,
+} from "@react-spring/web";
 import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "../GlobalStyles/HomePage.css";
@@ -7,48 +14,94 @@ import { Avatar } from "antd";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
 const HomeNotSignIn = () => {
+  const [show, setShow] = useState<boolean>(false);
+  const img = useSpringRef();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+
+      if (scrollPosition > 10 && !show) {
+        // Khi cuộn xuống và show là false, khởi động animation và đặt show thành true
+        img.start({ from: { y: 100 }, to: { y: 0 } });
+        setShow(true);
+      } else if (scrollPosition <= 10 && show) {
+        // Khi cuộn lên và show là true, khởi động animation và đặt show thành false sau khi hoàn tất
+        img.start({ from: { y: 0 }, to: { y: 100 } });
+        setTimeout(() => {
+          setShow(false); // Đặt show thành false sau khi animation hoàn tất
+        }, 300); // Thời gian tùy thuộc vào độ dài animation
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [show, img]);
+
+  const springsImg = useSpring({
+    ref: img,
+  });
+
+  const springs = useSpring({
+    from: { y: 0 },
+    to: { y: 100 },
+  });
+
   return (
     <>
-      <Container className="my-4">
+      <Container className="mb-4">
         <Header page="HomeNotSignIn" />
         <Container>
           <div className="mx-5">
             <div className="d-inline-flex my-5">
               <Row>
-                <Col xl={6} lg={12} className="text-lg-center text-xl-start">
-                  <Row>
-                    <Col lg={12}>
-                      <h1 className="div-1-h1 fw-bold">
-                        Save your data storage here.
-                      </h1>
-                    </Col>
-                    <Col lg={12}>
-                      <p className="div-1-text">
-                        Data Warehouse is a data storage area that has been
-                        tested for security, so you can store your data here
-                        safely but not be afraid of being stolen by others.
-                      </p>
-                    </Col>
-                    <Col lg={12}>
-                      <div className="div-1-btn d-lg-flex justify-content-lg-center justify-content-xl-start">
-                        <ButtonApp title="Learn more" size="large" />
-                      </div>
-                    </Col>
-                  </Row>
+                <Col
+                  xl={6}
+                  lg={12}
+                  className="text-lg-center text-xl-start mb-5"
+                >
+                  <animated.div style={springs}>
+                    <Row>
+                      <Col lg={12}>
+                        <h1 className="div-1-h1 fw-bold">
+                          Save your data storage here.
+                        </h1>
+                      </Col>
+                      <Col lg={12}>
+                        <p className="div-1-text">
+                          Data Warehouse is a data storage area that has been
+                          tested for security, so you can store your data here
+                          safely but not be afraid of being stolen by others.
+                        </p>
+                      </Col>
+                      <Col lg={12}>
+                        <div className="div-1-btn d-lg-flex justify-content-lg-center justify-content-xl-start">
+                          <ButtonApp title="Learn more" size="large" />
+                        </div>
+                      </Col>
+                    </Row>
+                  </animated.div>
                 </Col>
-                <Col xl={6} lg={12}>
-                  <div className="div-1-img d-flex justify-content-center">
-                    <img
-                      src="https://warehouse-blue.vercel.app/static/media/hero-img.d06ff33bd5f804baba29.png"
-                      alt=""
-                      className="img-div1"
-                    />
-                  </div>
+                <Col xl={6} lg={12} className="div-1-col">
+                  {show && (
+                    <animated.div
+                      className="div-1-img d-flex justify-content-center"
+                      style={springsImg}
+                    >
+                      <img
+                        src="https://warehouse-blue.vercel.app/static/media/hero-img.d06ff33bd5f804baba29.png"
+                        alt=""
+                        className="img-div1"
+                      />
+                    </animated.div>
+                  )}
                 </Col>
               </Row>
             </div>
             <div className="my-5">
-              <h2 className="text-center fs-1 my-5 fw-bolder">Features</h2>
+              <h2 className="features text-center fs-1 my-5 pt-5 fw-bolder">
+                Features
+              </h2>
               <p
                 className="m-auto text-center"
                 style={{ maxWidth: "550px", fontSize: "18px" }}
@@ -321,4 +374,4 @@ const HomeNotSignIn = () => {
     </>
   );
 };
-export default HomeNotSignIn;
+export default memo(HomeNotSignIn);

@@ -1,11 +1,27 @@
+import { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
+
+import "../GlobalStyles/SignIn.css";
+
 import Footer from "../layouts/Footer";
 import Header from "../layouts/Header";
-import "../GlobalStyles/SignIn.css";
 import ButtonApp from "../components/Button";
-import { Container } from "react-bootstrap";
-import InputApp from "../components/InputApp/Input";
+import { loginApi } from "../services/Service";
+import { Button } from "antd";
 
 const SignIn = () => {
+  const [username, setUsername] = useState<string>("");
+  const [err, setErr] = useState<string>("");
+
+  const handleLogin = async () => {
+    if (!username) {
+      setErr("Please enter into this field.");
+      return;
+    }
+
+    let res = await loginApi("admin");
+  };
+
   return (
     <>
       <Container className="my-4">
@@ -13,9 +29,25 @@ const SignIn = () => {
         <div className="p-5 my-5 text-center">
           <h1 className="fs-1 my-5">Sign In</h1>
           <div className="form text-center">
-            <InputApp placeholder="Username" type="text" />
+            <input
+              placeholder={"Username"}
+              type={"text"}
+              className="input mb-4"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            {err && <p style={{ color: "red" }}>{err}</p>}
             <div className="form-btn">
-              <ButtonApp title="Sign In" size="large" />
+              {/* <ButtonApp title="Sign In" size="large" /> */}
+              <Button
+                style={{ backgroundColor: "#894DDB", height: "50px" }}
+                block
+                type="primary"
+                shape="round"
+                size={"large"}
+                onClick={() => handleLogin()}
+              >
+                Sign In
+              </Button>
             </div>
           </div>
         </div>

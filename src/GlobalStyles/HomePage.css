@@ -1,21 +1,27 @@
 .div-1-h1 {
-  font-size: 70px;
+  font-size: 80px;
   color: #212353;
   padding-top: 96px;
 }
 .div-1-text {
-  max-width: 350px;
+  max-width: 380px;
   font-size: 18px;
   margin-top: 48px;
 }
+.div-1-col {
+  transform: translate(-30%, 15%);
+}
 .div-1-img {
   margin-top: 200px;
-  width: 80%;
+  width: 120%;
   height: 65%;
 }
 
 .div-1-btn {
   width: 30%;
+}
+.features {
+  margin-top: 150px;
 }
 .features-card {
   flex-direction: column;
