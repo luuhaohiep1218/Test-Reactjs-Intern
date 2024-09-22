@@ -19,7 +19,16 @@ const SignIn = () => {
       return;
     }
 
-    let res = await loginApi("admin");
+    const request = new Request(
+      "https://api-test-web.agiletech.vn/auth/login",
+      {
+        method: "POST",
+        body: JSON.stringify({ username: "admin" }),
+      }
+    );
+
+    const response1 = await fetch(request);
+    console.log(response1);
   };
 
   return (
