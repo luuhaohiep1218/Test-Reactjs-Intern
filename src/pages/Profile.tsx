@@ -3,10 +3,57 @@ import "../GlobalStyles/Profile.css";
 import { Col, Container, Row } from "react-bootstrap";
 import ButtonApp from "../components/Button";
 import InputApp from "../components/InputApp/Input";
-import { Select } from "antd";
+import { Button, Select, SelectProps } from "antd";
 import TableApp from "../components/Table";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { log } from "console";
+import ModalAddPost from "../components/ModalAddPost";
 
 const Profile = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [tags, setTags] = useState<string[]>([]);
+
+  const [searchTitle, setSearchTitle] = useState<string>("");
+  const [searchTag, setSearchTag] = useState<string>("");
+
+  const options: SelectProps["options"] = [];
+  for (let i = 1; i < tags.length; i++) {
+    options.push({
+      value: tags[i],
+      label: tags[i],
+    });
+  }
+
+  const handleChange = (value: string) => {
+    setSearchTag(value);
+  };
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const user = JSON.parse(localStorage.getItem("login") || "");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseTags = await axios.get(
+          `https://api-test-web.agiletech.vn/posts/tags`,
+          {
+            headers: {
+              accept: "accept: */*",
+              Authorization: `Bearer ${user.accessToken}`,
+            },
+          }
+        );
+        setTags(responseTags.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [user.accessToken]);
+
   return (
     <>
       {/* <div className="d-flex w-100">
@@ -57,58 +104,50 @@ const Profile = () => {
           <Row className="mx-5 mt-4 p-4">
             <Col xl={6}>
               <div className="add-btn">
-                <ButtonApp title="Add new" size="large" />
+                <Button
+                  style={{
+                    backgroundColor: "#894DDB",
+                    height: "50px",
+                    width: "213px",
+                  }}
+                  block
+                  type="primary"
+                  shape="round"
+                  size={"large"}
+                  onClick={showModal}
+                >
+                  Add new
+                </Button>
               </div>
             </Col>
             <Col xl={3}>
-              <InputApp placeholder="Title" type="text" />
+              <InputApp
+                placeholder="Title"
+                type="text"
+                searchTitle={searchTitle}
+                setSearchTitle={setSearchTitle}
+              />
             </Col>
             <Col xl={3}>
               <Select
-                showSearch
-                size="large"
-                style={{ width: 226, height: 45 }}
-                placeholder="Search to Select"
-                optionFilterProp="label"
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-                options={[
-                  {
-                    value: "1",
-                    label: "Not Identified",
-                  },
-                  {
-                    value: "2",
-                    label: "Closed",
-                  },
-                  {
-                    value: "3",
-                    label: "Communicated",
-                  },
-                  {
-                    value: "4",
-                    label: "Identified",
-                  },
-                  {
-                    value: "5",
-                    label: "Resolved",
-                  },
-                  {
-                    value: "6",
-                    label: "Cancelled",
-                  },
-                ]}
+                mode="tags"
+                style={{ width: "100%" }}
+                onChange={handleChange}
+                tokenSeparators={[","]}
+                options={options}
               />
             </Col>
           </Row>
           <Row className="mx-5 px-4">
-            <TableApp />
+            <TableApp searchTitle={searchTitle} searchTag={searchTag} />
           </Row>
         </Col>
       </Row>
+      <ModalAddPost
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        tags={tags}
+      />
     </>
   );
 };

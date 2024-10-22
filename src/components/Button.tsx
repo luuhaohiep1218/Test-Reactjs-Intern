@@ -10,7 +10,7 @@ const ButtonApp = (props: IProps) => {
   return (
     <>
       <Button
-        style={{ backgroundColor: "#894DDB", height: "50px" }}
+        style={{ backgroundColor: "#894DDB", height: "50px", width: "213px" }}
         block
         type="primary"
         shape="round"

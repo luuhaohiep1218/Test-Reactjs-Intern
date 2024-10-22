@@ -1,144 +1,99 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Space, Table, Tag } from "antd";
 import type { TableProps } from "antd";
+import axios from "axios";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
+  id: string;
+  title: string;
+  tags: { tag: string }[];
+  description: string;
+}
+interface IProps {
+  searchTitle: string;
+  searchTag: string;
 }
 
-const columns: TableProps<DataType>["columns"] = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
+const TableApp = (props: IProps) => {
+  const { searchTitle, searchTag } = props;
+  const [posts, setPosts] = useState<DataType[] | undefined>([]);
 
-const data: DataType[] = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "4",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "5",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "6",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "7",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "8",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "9",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "10",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "11",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
-const TableApp = () => {
-  return <Table columns={columns} dataSource={data} />;
+  const user = JSON.parse(localStorage.getItem("login") || "");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responsePosts = await axios.get(
+          `https://api-test-web.agiletech.vn/posts?title=${searchTitle}`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${user.accessToken}`,
+            },
+          }
+        );
+        console.log(responsePosts.data);
+
+        const formattedPosts: DataType[] = responsePosts.data.posts.map(
+          (post: any) => ({
+            id: post.id,
+            title: post.title,
+            tags: post.tags.map((t: any) => ({ tag: t.tag || t })),
+            description: post.description,
+          })
+        );
+
+        const filteredPosts =
+          searchTag && searchTag.length > 0
+            ? formattedPosts.filter((post) =>
+                post.tags.some((tagObj) => searchTag.includes(tagObj.tag))
+              )
+            : formattedPosts;
+
+        setPosts(filteredPosts);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [user.accessToken, searchTitle, searchTag, posts]);
+  const columns: TableProps<DataType>["columns"] = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Tags",
+      key: "tags",
+      dataIndex: "tags",
+      render: (_, { tags }) => (
+        <>
+          {tags.map((tagObj) => {
+            const tag = tagObj.tag;
+            return <Tag key={tag}>{tag.toUpperCase()}</Tag>;
+          })}
+        </>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <EditOutlined />
+          <DeleteOutlined />
+        </Space>
+      ),
+    },
+  ];
+
+  return <Table columns={columns} dataSource={posts} />;
 };
 export default TableApp;

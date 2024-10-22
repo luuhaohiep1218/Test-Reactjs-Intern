@@ -6,35 +6,45 @@ import "../GlobalStyles/SignIn.css";
 import Footer from "../layouts/Footer";
 import Header from "../layouts/Header";
 import ButtonApp from "../components/Button";
-import { loginApi } from "../services/Service";
 import { Button } from "antd";
+import { log } from "console";
+import axios from "axios";
 
 const SignIn = () => {
   const [username, setUsername] = useState<string>("");
   const [err, setErr] = useState<string>("");
 
   const handleLogin = async () => {
-    if (!username) {
-      setErr("Please enter into this field.");
-      return;
-    }
-
-    const request = new Request(
-      "https://api-test-web.agiletech.vn/auth/login",
-      {
-        method: "POST",
-        body: JSON.stringify({ username: "admin" }),
+    try {
+      if (!username) {
+        setErr("Please enter into this field.");
+        return;
       }
-    );
+      const response = await axios.post(
+        "https://api-test-web.agiletech.vn/auth/login",
+        {
+          headers: {
+            accept: "application/json",
+            ContentType: "application/json",
+          },
+          username: username,
+        }
+      );
+      console.log(response.data);
 
-    const response1 = await fetch(request);
-    console.log(response1);
+      if (response && response.data) {
+        localStorage.setItem("login", JSON.stringify(response.data));
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
     <>
       <Container className="my-4">
-        <Header page="SignIn" />
+        <Header />
         <div className="p-5 my-5 text-center">
           <h1 className="fs-1 my-5">Sign In</h1>
           <div className="form text-center">

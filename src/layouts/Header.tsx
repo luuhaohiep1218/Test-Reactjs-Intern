@@ -3,12 +3,10 @@ import { Link } from "react-router-dom";
 import { useSpring, animated, SpringValue } from "@react-spring/web";
 import { Container, Navbar, Row, Col } from "react-bootstrap";
 import ButtonApp from "../components/Button";
+import axios from "axios";
 
-interface IProps {
-  page: string;
-}
-
-const Header = (props: IProps) => {
+const Header = () => {
+  //Animation for header
   const [show, setShow] = useState<boolean>(false);
   const springOpacity = new SpringValue(0);
 
@@ -23,7 +21,23 @@ const Header = (props: IProps) => {
     to: { y: 50 },
     delay: 300,
   });
-  const { page } = props;
+
+  //Header for Login
+  const user = JSON.parse(localStorage.getItem("login") || "");
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        "https://api-test-web.agiletech.vn/auth/logout",
+        {
+          headers: {
+            accept: "application/json",
+            ContentType: "application/json",
+          },
+        }
+      );
+    } catch (error) {}
+  };
+
   return (
     <>
       {show && (
@@ -31,7 +45,7 @@ const Header = (props: IProps) => {
           <Navbar className="d-block">
             <div>
               <Row>
-                <Col xl={10} lg={9} md={9} sm={8} xs={7}>
+                <Col xl={7} lg={9} md={9} sm={8} xs={7}>
                   <Navbar.Brand>
                     <Link to={"/"}>
                       <img
@@ -42,13 +56,23 @@ const Header = (props: IProps) => {
                     </Link>
                   </Navbar.Brand>
                 </Col>
-                <Col xl={2} lg={3} md={3} sm={4} xs={5}>
-                  {page && page === "HomeNotSignIn" && (
+                {!user && (
+                  <Col xl={3} lg={3} md={3} sm={4} xs={5}>
                     <Link to={"/signin"}>
                       <ButtonApp title="Sign In" size="large" />
                     </Link>
-                  )}
-                </Col>
+                  </Col>
+                )}
+                {user && (
+                  <Col xl={4} lg={3} md={3} sm={4} xs={5} className="d-flex">
+                    <Link to={"/profile"} className="mx-2">
+                      <ButtonApp title="Profile" size="large" />
+                    </Link>
+                    <Link to={"/"} onClick={handleLogout}>
+                      <ButtonApp title="Logout" size="large" />
+                    </Link>
+                  </Col>
+                )}
               </Row>
             </div>
           </Navbar>
