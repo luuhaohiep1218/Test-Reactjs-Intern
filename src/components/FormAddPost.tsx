@@ -22,7 +22,6 @@ const FormAddPost = (props: any) => {
     tags?: string[];
   };
   const user = JSON.parse(localStorage.getItem("login") || "");
-  console.log(user.accessToken);
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     const { title, description, tags } = values;
