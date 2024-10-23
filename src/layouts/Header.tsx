@@ -32,7 +32,7 @@ const Header = () => {
     : null;
 
   const handleUserLogout = async () => {
-    await handleLogout();
+    await handleLogout(user.accessToken);
     navigate("/");
   };
 

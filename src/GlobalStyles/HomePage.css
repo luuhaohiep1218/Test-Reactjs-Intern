@@ -34,6 +34,7 @@
 }
 .features-car-content {
   position: absolute;
+  min-height: 250px;
   max-width: 220px;
   text-align: start;
   transform: translate(-25%, -135%);

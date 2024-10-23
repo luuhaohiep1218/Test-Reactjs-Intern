@@ -1,17 +1,13 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
-const user = localStorage.getItem("login")
-  ? JSON.parse(localStorage.getItem("login") || "")
-  : null;
-export const fetchTags = async () => {
+export const fetchTags = async (token: any) => {
   try {
     const responseTags = await axios.get(
       `https://api-test-web.agiletech.vn/posts/tags`,
       {
         headers: {
-          accept: "accept: */*",
-          Authorization: `Bearer ${user.accessToken}`,
+          accept: "*/*",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -25,17 +21,14 @@ export const fetchTags = async () => {
   }
 };
 
-export const fetchPosts = async () => {
+export const fetchPosts = async (token: any) => {
   try {
-    if (!user) {
-      return;
-    }
     const response = await axios.get(
       "https://api-test-web.agiletech.vn/posts",
       {
         headers: {
           accept: "*/*",
-          Authorization: `Bearer ${user.accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -46,25 +39,23 @@ export const fetchPosts = async () => {
   }
 };
 
-export const fetchPostsSearch = async (searchTitle: any, currentPage: any) => {
-  try {
-    if (!user) {
-      return;
-    }
-    const responsePosts = await axios.get(
-      `https://api-test-web.agiletech.vn/posts?title=${searchTitle}&page=${currentPage}`,
-      {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${user.accessToken}`,
-        },
-      }
-    );
-    return responsePosts.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const fetchPostsSearch = async (searchTitle: any, currentPage: any) => {
+//   try {
+
+//     const responsePosts = await axios.get(
+//       `https://api-test-web.agiletech.vn/posts?title=${searchTitle}&page=${currentPage}`,
+//       {
+//         headers: {
+//           accept: "application/json",
+//           Authorization: `Bearer ${user?.accessToken}`,
+//         },
+//       }
+//     );
+//     return responsePosts.data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const login = async (username: string) => {
   const response = await axios.post(
@@ -83,7 +74,8 @@ export const login = async (username: string) => {
 export const handleAddPost = async (
   title: any,
   description: any,
-  tags: any
+  tags: any,
+  token: any
 ) => {
   const res = await axios.post(
     "https://api-test-web.agiletech.vn/posts",
@@ -95,7 +87,7 @@ export const handleAddPost = async (
     {
       headers: {
         accept: "*/*",
-        Authorization: `Bearer ${user.accessToken}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     }
@@ -103,14 +95,14 @@ export const handleAddPost = async (
   return res.data;
 };
 
-export const handleDeletePost = async (id: any) => {
+export const handleDeletePost = async (id: any, token: any) => {
   try {
     const res = await axios.delete(
       `https://api-test-web.agiletech.vn/posts/${id}`,
       {
         headers: {
           accept: "*/*",
-          Authorization: `Bearer ${user.accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -124,7 +116,8 @@ export const handleEditPost = async (
   id: any,
   title: any,
   description: any,
-  tags: any
+  tags: any,
+  token: any
 ) => {
   try {
     const res = await axios.patch(
@@ -137,7 +130,7 @@ export const handleEditPost = async (
       {
         headers: {
           accept: "*/*",
-          Authorization: `Bearer ${user.accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }
@@ -147,14 +140,14 @@ export const handleEditPost = async (
     console.log(error);
   }
 };
-export const handleLogout = async () => {
+export const handleLogout = async (token: any) => {
   try {
     const response = await axios.delete(
       "https://api-test-web.agiletech.vn/auth/logout",
       {
         headers: {
           accept: "*/*",
-          Authorization: `Bearer ${user.accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );

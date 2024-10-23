@@ -166,7 +166,12 @@ const HomePage = () => {
                     className="d-flex justify-content-center mx-5"
                     style={scale1Spring}
                   >
-                    <Col xxl={6} xl={6} lg={12} className="my-4 text-xl-center">
+                    <Col
+                      xxl={6}
+                      xl={6}
+                      lg={12}
+                      className="mt-5 mb-3 text-xl-center"
+                    >
                       <div>
                         <img
                           src="https://warehouse-blue.vercel.app/static/media/feature1_bg.02fab76ed86ad763f03f.png"

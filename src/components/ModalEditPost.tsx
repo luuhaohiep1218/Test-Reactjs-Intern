@@ -59,7 +59,8 @@ const ModalEditPost = (props: any) => {
       editPost?.id,
       title,
       description,
-      tags
+      tags,
+      user.accessToken
     );
     if (handleEdit) {
       setIsModalEditOpen(false);

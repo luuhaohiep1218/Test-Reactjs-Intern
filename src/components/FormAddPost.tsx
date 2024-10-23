@@ -12,7 +12,7 @@ import { handleAddPost } from "../utils/Api";
 
 const FormAddPost = (props: any) => {
   const [form] = Form.useForm();
-  const { tagsPost, setIsModalOpen, isModalOpen, fetchData } = props;
+  const { tagsPost, setIsModalOpen, isModalOpen, fetchData, token } = props;
   const { Option } = Select;
 
   type FieldType = {
@@ -29,8 +29,7 @@ const FormAddPost = (props: any) => {
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     const { title, description, tags } = values;
     try {
-      const addPost = await handleAddPost(title, description, tags);
-      console.log(addPost);
+      const addPost = await handleAddPost(title, description, tags, token);
 
       if (addPost) {
         setIsModalOpen(false);

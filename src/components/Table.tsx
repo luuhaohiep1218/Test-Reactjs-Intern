@@ -24,6 +24,7 @@ const TableApp = (props: any) => {
     setCurrentPage,
     posts,
     pageSize,
+    token,
   } = props;
 
   const [deletePostId, setDeletePostId] = useState<string>("");
@@ -46,7 +47,7 @@ const TableApp = (props: any) => {
   };
 
   const confirm: PopconfirmProps["onConfirm"] = async (e) => {
-    const deletePost = await handleDeletePost(deletePostId);
+    const deletePost = await handleDeletePost(deletePostId, user.accessToken);
     if (deletePost) {
       message.success("Delete successful");
       fetchData();

@@ -7,12 +7,7 @@ import TableApp from "../components/Table";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ModalAddPost from "../components/ModalAddPost";
-import {
-  fetchPosts,
-  fetchPostsSearch,
-  fetchTags,
-  handleLogout,
-} from "../utils/Api";
+import { fetchTags, handleLogout } from "../utils/Api";
 
 interface DataType {
   id: string;
@@ -28,6 +23,14 @@ const Profile = () => {
     ? JSON.parse(localStorage.getItem("login") || "")
     : null;
 
+  useEffect(() => {
+    const getTags = async () => {
+      const tagsData = await fetchTags(user.accessToken);
+      setTags(tagsData);
+    };
+    getTags();
+  }, []);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [searchTitle, setSearchTitle] = useState<string>("");
@@ -37,19 +40,50 @@ const Profile = () => {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    if (user === null) {
-      navigate("/sigin"); // Chuyển hướng tới trang login
-    }
-  }, [user, navigate]);
+  const fetchData = async () => {
+    try {
+      const responsePosts = await axios.get(
+        `https://api-test-web.agiletech.vn/posts?title=${searchTitle}&page=${currentPage}`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${user?.accessToken}`,
+          },
+        }
+      );
 
+      const formattedPosts: DataType[] = responsePosts.data.posts.map(
+        (post: any) => ({
+          id: post.id,
+          title: post.title,
+          tags: post.tags.map((t: any) => ({ tag: t.tag || t })),
+          description: post.description,
+        })
+      );
+
+      const filteredPosts =
+        searchTag && searchTag.length > 0
+          ? formattedPosts.filter((post) =>
+              post.tags.some((tagObj) => searchTag.includes(tagObj.tag))
+            )
+          : formattedPosts;
+
+      // Check if the new posts are different before setting state
+      if (JSON.stringify(posts) !== JSON.stringify(filteredPosts)) {
+        setPosts(filteredPosts);
+        setTotal(responsePosts.data.total);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   useEffect(() => {
-    const getTags = async () => {
-      const tagsData = await fetchTags();
-      setTags(tagsData);
-    };
-    getTags();
-  }, [tags]);
+    if (!user) {
+      navigate("/signin");
+    } else {
+      fetchData();
+    }
+  }, [user, navigate, fetchData]);
 
   const options: SelectProps["options"] = [];
   for (let i = 1; i < tags.length; i++) {
@@ -62,33 +96,9 @@ const Profile = () => {
   const handleChange = (value: string) => {
     setSearchTag(value);
   };
+
   const showModal = () => {
     setIsModalOpen(true);
-  };
-
-  const fetchData = async () => {
-    try {
-      const dataPost = await fetchPostsSearch(searchTitle, currentPage);
-
-      const formattedPosts: DataType[] = dataPost.posts.map((post: any) => ({
-        id: post.id,
-        title: post.title,
-        tags: post.tags.map((t: any) => ({ tag: t.tag || t })),
-        description: post.description,
-      }));
-
-      const filteredPosts =
-        searchTag && searchTag.length > 0
-          ? formattedPosts.filter((post) =>
-              post.tags.some((tagObj) => searchTag.includes(tagObj.tag))
-            )
-          : formattedPosts;
-
-      setPosts(filteredPosts);
-      setTotal(dataPost.total);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
   };
 
   return (
@@ -109,7 +119,7 @@ const Profile = () => {
             <div
               className="my-2"
               onClick={() => {
-                handleLogout();
+                handleLogout(user.accessToken);
               }}
               style={{ cursor: "pointer" }}
             >
@@ -176,6 +186,7 @@ const Profile = () => {
         setIsModalOpen={setIsModalOpen}
         tags={tags}
         fetchData={fetchData}
+        token={user.accessToken}
       />
     </>
   );

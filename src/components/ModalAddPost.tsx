@@ -2,7 +2,7 @@ import { Modal } from "antd";
 import FormAddPost from "./FormAddPost";
 
 const ModalAddPost = (props: any) => {
-  const { isModalOpen, setIsModalOpen, tags, fetchData } = props;
+  const { isModalOpen, setIsModalOpen, tags, fetchData, token } = props;
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -25,6 +25,7 @@ const ModalAddPost = (props: any) => {
         setIsModalOpen={setIsModalOpen}
         isModalOpen={isModalOpen}
         fetchData={fetchData}
+        token={token}
       />
     </Modal>
   );
