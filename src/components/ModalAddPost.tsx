@@ -1,12 +1,8 @@
 import { Modal } from "antd";
 import FormAddPost from "./FormAddPost";
-import { useState } from "react";
 
 const ModalAddPost = (props: any) => {
-  const { isModalOpen, setIsModalOpen, tags } = props;
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [tag, setTag] = useState<string>("");
+  const { isModalOpen, setIsModalOpen, tags, fetchData } = props;
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -24,7 +20,12 @@ const ModalAddPost = (props: any) => {
       maskClosable={false}
       footer={null}
     >
-      <FormAddPost tagsPost={tags} setIsModalOpen={setIsModalOpen} />
+      <FormAddPost
+        tagsPost={tags}
+        setIsModalOpen={setIsModalOpen}
+        isModalOpen={isModalOpen}
+        fetchData={fetchData}
+      />
     </Modal>
   );
 };

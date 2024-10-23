@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./Input.css";
 interface IProps {
   placeholder: string;

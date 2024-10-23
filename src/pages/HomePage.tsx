@@ -1,11 +1,6 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { ArrowRightOutlined } from "@ant-design/icons";
-import {
-  useSpring,
-  SpringValue,
-  animated,
-  useSpringRef,
-} from "@react-spring/web";
+import { useSpring, animated, useSpringRef } from "@react-spring/web";
 import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "../GlobalStyles/HomePage.css";
@@ -13,9 +8,9 @@ import ButtonApp from "../components/Button";
 import { Avatar } from "antd";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
-const HomeNotSignIn = () => {
+const HomePage = () => {
   //Animation for homepage
-  const [show, setShow] = useState<boolean>(true);
+  const [show, setShow] = useState<boolean>(false);
   const [showFeatures, setShowFeatures] = useState<boolean>(false);
   const [showFeaturesCard, setShowFeaturesCard] = useState<boolean>(false);
 
@@ -51,10 +46,10 @@ const HomeNotSignIn = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      if (scrollPosition > 10 && !show) {
+      if (scrollPosition > 30 && !show) {
         img.start({ from: { y: 100 }, to: { y: 0 } });
         setShow(true);
-      } else if (scrollPosition <= 10 && show) {
+      } else if (scrollPosition <= 30 && show) {
         img.start({ from: { y: 0 }, to: { y: 100 } });
         setTimeout(() => {
           setShow(false);
@@ -82,11 +77,6 @@ const HomeNotSignIn = () => {
 
         setShowFeaturesCard(false);
       }
-
-      // if (scrollPosition > 350 && !showFeaturesCard) {
-      //   scaleRef2.start({ scale: 1, delay: 2000 });
-
-      // }
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -443,4 +433,4 @@ const HomeNotSignIn = () => {
     </>
   );
 };
-export default memo(HomeNotSignIn);
+export default memo(HomePage);

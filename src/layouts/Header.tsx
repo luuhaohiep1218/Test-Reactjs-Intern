@@ -4,8 +4,12 @@ import { useSpring, animated, SpringValue } from "@react-spring/web";
 import { Container, Navbar, Row, Col } from "react-bootstrap";
 import ButtonApp from "../components/Button";
 import axios from "axios";
+import { Button } from "antd";
+import { useNavigate } from "react-router-dom";
+import { handleLogout } from "../utils/Api";
 
 const Header = () => {
+  const navigate = useNavigate();
   //Animation for header
   const [show, setShow] = useState<boolean>(false);
   const springOpacity = new SpringValue(0);
@@ -23,20 +27,9 @@ const Header = () => {
   });
 
   //Header for Login
-  const user = JSON.parse(localStorage.getItem("login") || "");
-  const handleLogout = async () => {
-    try {
-      const response = await axios.post(
-        "https://api-test-web.agiletech.vn/auth/logout",
-        {
-          headers: {
-            accept: "application/json",
-            ContentType: "application/json",
-          },
-        }
-      );
-    } catch (error) {}
-  };
+  const user = localStorage.getItem("login")
+    ? JSON.parse(localStorage.getItem("login") || "")
+    : null;
 
   return (
     <>
@@ -57,7 +50,14 @@ const Header = () => {
                   </Navbar.Brand>
                 </Col>
                 {!user && (
-                  <Col xl={3} lg={3} md={3} sm={4} xs={5}>
+                  <Col
+                    xl={3}
+                    lg={3}
+                    md={3}
+                    sm={4}
+                    xs={5}
+                    style={{ marginLeft: "auto" }}
+                  >
                     <Link to={"/signin"}>
                       <ButtonApp title="Sign In" size="large" />
                     </Link>
@@ -68,8 +68,25 @@ const Header = () => {
                     <Link to={"/profile"} className="mx-2">
                       <ButtonApp title="Profile" size="large" />
                     </Link>
-                    <Link to={"/"} onClick={handleLogout}>
-                      <ButtonApp title="Logout" size="large" />
+
+                    <Link to={"/"}>
+                      <Button
+                        style={{
+                          backgroundColor: "#894DDB",
+                          height: "50px",
+                          width: "213px",
+                        }}
+                        block
+                        type="primary"
+                        shape="round"
+                        size="large"
+                        onClick={() => {
+                          handleLogout();
+                          navigate("/");
+                        }}
+                      >
+                        Logout
+                      </Button>
                     </Link>
                   </Col>
                 )}

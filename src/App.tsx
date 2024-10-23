@@ -1,27 +1,26 @@
-import { Container } from "react-bootstrap";
-import Header from "./layouts/Header";
-import HomeNotSignIn from "./pages/HomePage";
-import Footer from "./layouts/Footer";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  NavLink,
-  Routes,
-} from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import "./GlobalStyles/GlobalStyles.css";
 import SignIn from "./pages/SignIn";
 import Profile from "./pages/Profile";
+import PrivateRoute from "./Router/PrivateRoute";
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<HomeNotSignIn />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
     </Router>

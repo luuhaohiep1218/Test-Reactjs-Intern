@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Space, Table, Tag } from "antd";
-import type { TableProps } from "antd";
+import { Popconfirm, Space, Table, Tag, message } from "antd";
+import type { PopconfirmProps, TableProps } from "antd";
 import axios from "axios";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import ModalEditPost from "./ModalEditPost";
+import { handleDeletePost } from "../utils/Api";
 
 interface DataType {
   id: string;
@@ -11,66 +12,73 @@ interface DataType {
   tags: { tag: string }[];
   description: string;
 }
-interface IProps {
-  searchTitle: string;
-  searchTag: string;
-}
 
-const TableApp = (props: IProps) => {
-  const { searchTitle, searchTag } = props;
-  const [posts, setPosts] = useState<DataType[] | undefined>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(0);
+const TableApp = (props: any) => {
+  const {
+    searchTitle,
+    searchTag,
+    tags,
+    fetchData,
+    currentPage,
+    total,
+    setCurrentPage,
+    posts,
+    pageSize,
+  } = props;
 
+  const [deletePostId, setDeletePostId] = useState<string>("");
+
+  const [editPost, setEditPost] = useState<DataType | undefined>(undefined);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("login") || "");
+  const user = localStorage.getItem("login")
+    ? JSON.parse(localStorage.getItem("login") || "")
+    : null;
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const responsePosts = await axios.get(
-          `https://api-test-web.agiletech.vn/posts?title=${searchTitle}&page=${currentPage}`,
-          {
-            headers: {
-              accept: "application/json",
-              Authorization: `Bearer ${user.accessToken}`,
-            },
-          }
-        );
-        console.log(responsePosts.data);
-
-        const formattedPosts: DataType[] = responsePosts.data.posts.map(
-          (post: any) => ({
-            id: post.id,
-            title: post.title,
-            tags: post.tags.map((t: any) => ({ tag: t.tag || t })),
-            description: post.description,
-          })
-        );
-
-        const filteredPosts =
-          searchTag && searchTag.length > 0
-            ? formattedPosts.filter((post) =>
-                post.tags.some((tagObj) => searchTag.includes(tagObj.tag))
-              )
-            : formattedPosts;
-
-        setPosts(filteredPosts);
-        setTotal(responsePosts.data.total);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
     fetchData();
-  }, [user.accessToken, posts]);
+  }, [user.accessToken, searchTitle, searchTag, currentPage]);
+
+  const handleEditPost = (id: string) => {
+    const findPost = posts.find((post: { id: string }) => post.id === id);
+    setEditPost(findPost);
+    setIsModalEditOpen(true);
+  };
+
+  const confirm: PopconfirmProps["onConfirm"] = async (e) => {
+    const deletePost = await handleDeletePost(deletePostId);
+    if (deletePost) {
+      message.success("Delete successful");
+      fetchData();
+    } else {
+      message.error("Delete error!");
+    }
+  };
+
+  const cancel: PopconfirmProps["onCancel"] = (e) => {
+    message.error("Delete fail");
+  };
 
   const columns: TableProps<DataType>["columns"] = [
+    {
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
+      // hidden: true,
+    },
+    // {
+    //   title: "No",
+    //   dataIndex: "no",
+    //   key: "no",
+    //   rowScope: "row",
+    //   render: (_, __, index) => (
+    //     <span>{(currentPage - 1) * pageSize + index + 1}</span>
+    //   ),
+    // },
     {
       title: "Title",
       dataIndex: "title",
       key: "title",
-      render: (text) => <a>{text}</a>,
     },
     {
       title: "Description",
@@ -93,10 +101,19 @@ const TableApp = (props: IProps) => {
     {
       title: "Action",
       key: "action",
-      render: (_, record) => (
+      render: (_, { id }) => (
         <Space size="middle">
-          <EditOutlined onClick={() => setIsModalEditOpen(true)} />
-          <DeleteOutlined />
+          <EditOutlined onClick={() => handleEditPost(id)} />
+          <Popconfirm
+            title="Delete the task"
+            description="Are you sure to delete this task?"
+            onConfirm={confirm}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteOutlined onClick={() => setDeletePostId(id)} />
+          </Popconfirm>
         </Space>
       ),
     },
@@ -109,17 +126,21 @@ const TableApp = (props: IProps) => {
         dataSource={posts}
         pagination={{
           current: currentPage,
-          pageSize: pageSize,
           total: total, // Tổng số bài viết (số lượng từ API)
           onChange: (page, pageSize) => {
             setCurrentPage(page);
           },
         }}
       />
-      <ModalEditPost
-        setIsModalEditOpen={setIsModalEditOpen}
-        isModalEditOpen={isModalEditOpen}
-      />
+      {editPost && (
+        <ModalEditPost
+          setIsModalEditOpen={setIsModalEditOpen}
+          isModalEditOpen={isModalEditOpen}
+          editPost={editPost}
+          refreshData={fetchData}
+          tags={tags}
+        />
+      )}
     </>
   );
 };

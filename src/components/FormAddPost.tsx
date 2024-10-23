@@ -1,19 +1,18 @@
 import {
   Button,
-  Checkbox,
   Form,
   FormProps,
   Input,
   Select,
+  SelectProps,
   message,
 } from "antd";
 import axios from "axios";
-import { useEffect } from "react";
+import { handleAddPost } from "../utils/Api";
 
 const FormAddPost = (props: any) => {
   const [form] = Form.useForm();
-
-  const { tagsPost, setIsModalOpen } = props;
+  const { tagsPost, setIsModalOpen, isModalOpen, fetchData } = props;
   const { Option } = Select;
 
   type FieldType = {
@@ -23,30 +22,28 @@ const FormAddPost = (props: any) => {
   };
   const user = JSON.parse(localStorage.getItem("login") || "");
 
+  if (!isModalOpen) {
+    form.resetFields();
+  }
+
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     const { title, description, tags } = values;
     try {
-      const res = await axios.post(
-        "https://api-test-web.agiletech.vn/posts",
-        {
-          title,
-          description,
-          tags: Array.isArray(tags) ? tags : [tags], // Đảm bảo tags là một mảng
-        },
-        {
-          headers: {
-            accept: "*/*",
-            Authorization: `Bearer ${user.accessToken}`,
-            "Content-Type": "application/json", // Đúng định dạng Content-Type
-          },
-        }
-      );
-      if (res?.data) {
+      const addPost = await handleAddPost(title, description, tags);
+      console.log(addPost);
+
+      if (addPost) {
         setIsModalOpen(false);
         form.resetFields();
         message.success("Create new a post");
+        fetchData();
+      } else {
+        form.resetFields();
+        message.error("Create new a post fail!");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
@@ -55,9 +52,20 @@ const FormAddPost = (props: any) => {
     console.log("Failed:", errorInfo);
   };
 
-  const onGenderChange = (value: string) => {};
+  const options: SelectProps["options"] = [];
+  for (let i = 1; i < tagsPost.length; i++) {
+    options.push({
+      value: tagsPost[i],
+      label: tagsPost[i],
+    });
+  }
+
+  const handleChange = (value: string[]) => {
+    console.log(`selected ${value}`);
+  };
   return (
     <Form
+      form={form}
       name="basic"
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 16 }}
@@ -86,14 +94,14 @@ const FormAddPost = (props: any) => {
         rules={[{ required: true, message: "Please input your tags!" }]}
       >
         <Select
-          placeholder="Select a option and change input text above"
-          onChange={onGenderChange}
+          mode="multiple"
           allowClear
-        >
-          {tagsPost.map((tag: any) => {
-            return <Option value={tag}>{tag}</Option>;
-          })}
-        </Select>
+          style={{ width: "100%" }}
+          placeholder="Please select"
+          defaultValue={[]}
+          onChange={handleChange}
+          options={options}
+        />
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -105,6 +113,3 @@ const FormAddPost = (props: any) => {
   );
 };
 export default FormAddPost;
-function fetchData() {
-  throw new Error("Function not implemented.");
-}
