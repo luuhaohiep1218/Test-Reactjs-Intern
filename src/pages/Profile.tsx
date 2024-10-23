@@ -100,6 +100,10 @@ const Profile = () => {
   const showModal = () => {
     setIsModalOpen(true);
   };
+  const handleUserLogout = async () => {
+    await handleLogout(user.accessToken);
+    navigate("/");
+  };
 
   return (
     <>
@@ -118,9 +122,7 @@ const Profile = () => {
             <div className="my-2">Post</div>
             <div
               className="my-2"
-              onClick={() => {
-                handleLogout(user.accessToken);
-              }}
+              onClick={() => handleUserLogout()}
               style={{ cursor: "pointer" }}
             >
               Log Out

@@ -21,42 +21,6 @@ export const fetchTags = async (token: any) => {
   }
 };
 
-export const fetchPosts = async (token: any) => {
-  try {
-    const response = await axios.get(
-      "https://api-test-web.agiletech.vn/posts",
-      {
-        headers: {
-          accept: "*/*",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response?.data;
-  } catch (error) {
-    console.error("Failed to fetch data: ", error);
-    return [];
-  }
-};
-
-// export const fetchPostsSearch = async (searchTitle: any, currentPage: any) => {
-//   try {
-
-//     const responsePosts = await axios.get(
-//       `https://api-test-web.agiletech.vn/posts?title=${searchTitle}&page=${currentPage}`,
-//       {
-//         headers: {
-//           accept: "application/json",
-//           Authorization: `Bearer ${user?.accessToken}`,
-//         },
-//       }
-//     );
-//     return responsePosts.data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 export const login = async (username: string) => {
   const response = await axios.post(
     "https://api-test-web.agiletech.vn/auth/login",
