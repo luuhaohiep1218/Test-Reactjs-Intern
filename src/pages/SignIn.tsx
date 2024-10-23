@@ -4,7 +4,7 @@ import "../GlobalStyles/SignIn.css";
 import Footer from "../layouts/Footer";
 import Header from "../layouts/Header";
 import ButtonApp from "../components/Button";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { log } from "console";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -24,8 +24,13 @@ const SignIn = () => {
       }
       const signIn = await login(username);
 
-      if (signIn) {
+      console.log(signIn);
+
+      if (signIn && signIn?.accessToken) {
         localStorage.setItem("login", JSON.stringify(signIn));
+        navigate("/");
+      } else {
+        message.error("Login fail!");
         navigate("/");
       }
     } catch (error) {

@@ -31,6 +31,11 @@ const Header = () => {
     ? JSON.parse(localStorage.getItem("login") || "")
     : null;
 
+  const handleUserLogout = async () => {
+    await handleLogout();
+    navigate("/");
+  };
+
   return (
     <>
       {show && (
@@ -69,7 +74,7 @@ const Header = () => {
                       <ButtonApp title="Profile" size="large" />
                     </Link>
 
-                    <Link to={"/"}>
+                    <div>
                       <Button
                         style={{
                           backgroundColor: "#894DDB",
@@ -80,14 +85,11 @@ const Header = () => {
                         type="primary"
                         shape="round"
                         size="large"
-                        onClick={() => {
-                          handleLogout();
-                          navigate("/");
-                        }}
+                        onClick={() => handleUserLogout()}
                       >
                         Logout
                       </Button>
-                    </Link>
+                    </div>
                   </Col>
                 )}
               </Row>

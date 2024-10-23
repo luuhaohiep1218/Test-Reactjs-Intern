@@ -158,8 +158,13 @@ export const handleLogout = async () => {
         },
       }
     );
-    localStorage.removeItem("login");
+
+    if (response.status === 200) {
+      localStorage.removeItem("login");
+    } else {
+      console.error("Failed to log out: ", response.status);
+    }
   } catch (error) {
-    console.log(error);
+    console.error("Logout error: ", error);
   }
 };

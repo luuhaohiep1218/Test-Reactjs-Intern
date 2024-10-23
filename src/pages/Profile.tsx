@@ -111,6 +111,7 @@ const Profile = () => {
               onClick={() => {
                 handleLogout();
               }}
+              style={{ cursor: "pointer" }}
             >
               Log Out
             </div>
